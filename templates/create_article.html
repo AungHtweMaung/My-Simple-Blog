@@ -1,0 +1,31 @@
+{% extends './layout/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block extraCss%}
+    <style>
+        label {
+            display: block;
+        }
+        .django-ckeditor-widget {
+            display: block !important;
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Create Article{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 1000px;">
+        <div class="">
+            <h3 class="fs-2 py-3 fw-bold text-secondary border-bottom mt-4 mb-3">Create Article</h3>
+            <form method="post" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form | crispy }}
+                <input class="btn btn-primary" type="submit" value="Create">
+            </form>
+        </div>
+    </div>
+{% endblock %}

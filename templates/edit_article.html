@@ -1,0 +1,70 @@
+{% extends './layout/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block extraCss%}
+    <style>
+        label {
+            display: block;
+        }
+        .django-ckeditor-widget{
+          display: block !important;
+        }
+        #cke_id_content {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Edit Article{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 1000px;">
+        <div class="">
+            <div class="d-flex align-items-center justify-content-between border-bottom mb-3">
+                <h3 class="fs-2  fw-bold text-secondary mt-4 mb-3">Edit Article</h3>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Remove</button>
+                <form id="remove_it" class="d-none" action="{% url 'remove_article' post_id %}" method="post">
+                    {% csrf_token %}
+                </form>
+            </div>
+
+            <form method="post" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form | crispy }}
+                <input class="btn btn-primary" type="submit" value="Save">
+            </form>
+        </div>
+    </div>
+
+
+  <!-- action ဖြစ်မယ့် btn ထဲမှာ data-bs-toggle="modal" data-bs-target="#confirmModal" ထည့်ပေးလိုက်တယ်  -->
+  <!-- Modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          
+        </div>
+        <div class="modal-body">
+          <p>Are you sure to delete it?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          {% comment %} <button type="button" onclick="document.querySelector('remove_it').submit()" class="btn btn-danger">Remove</button> {% endcomment %}
+
+          <button type="button" onclick="document.querySelector('#remove_it').submit()" class="btn btn-danger">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    
+</script>
+{% endblock js %}

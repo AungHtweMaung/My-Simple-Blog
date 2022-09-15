@@ -1,0 +1,44 @@
+{% extends './layout/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;
+{% if messages %}margin-top: 50px;{% else %}margin-top: 150px;{% endif %}">
+
+    {% for article in articles reversed %}
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col-auto d-none d-lg-block ">
+                  <img src="media/{{ article.image }}" width="280px" height="280px " alt="{{ article.image }}">
+        
+                </div>
+                <div class="col p-4 d-flex flex-column">
+                    {% comment %} <strong class="d-inline-block mb-2 text-secondary">{{ article.title }} by <i class="text-dark">{{ article.author }}</i></strong> {% endcomment %}
+                    <h3 class="mb-0 text-secondary">{{ article.title }}</h3>
+                    <span>by <strong><i>{{ article.author }}</i></strong></span>
+                    <p class="card-text" style="">{{ article.content|slice:"50"|safe}}</p>
+                    <span class="text-secondary ms-2">...</span>
+                    <div>
+                        <a href="{% url 'article' article.id %}" class="btn btn-success mt-3">Continue reading</a>
+                    </div>
+                    
+                </div>
+            </div>
+          </div>
+    </div>
+    {% empty %}
+    <div class="row">
+        <div class="text-center text-secondary">
+            <h2><i>No Blog Post</i></h2>
+        </div>
+    </div>
+    {% endfor %}
+
+    
+</div>
+       
+        
+    
+{% endblock %}

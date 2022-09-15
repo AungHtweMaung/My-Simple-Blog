@@ -1,0 +1,66 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark navbar-fixed-top bg-dark" aria-label="Offcanvas navbar large">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">Simple Blog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2" aria-controls="offcanvasNavbar2">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end text-white bg-dark" tabindex="-1" id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbar2Label">Simple Blog</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+          <ul class="navbar-nav align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+            </li>
+          </ul>
+          {% if request.user.is_authenticated %}
+            
+            <div class="w-100 d-lg-flex flex-lg-row flex-md-column justify-content-between align-items-center">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
+              </ul>
+              <div class="d-lg-flex">
+                <form action="{% url 'search' %}" class="d-flex justify-content-center align-items-center me-3">
+                  <input type="text" class="form-control" value="{% if search_title %}{{ search_title}}{% endif %}" name="search_title">
+                  <button type="submit" class="btn btn-primary ms-3">Search</button>
+                </form>
+                <div class="dropdown-center" style="margin-right: 150px;">
+  
+                  <img src="{{ user.profile.image.url }}" class="rounded-circle" width="45" height="45" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" alt="">
+                  
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                  </ul>
+                </div>
+              </div>
+              
+            </div>
+          {% else %}
+          <div class="d-flex w-75 justify-content-between">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+            </ul>
+            <form action="{% url 'search' %}" class="d-flex">
+              <input type="text" class="form-control" value="{% if search_title %}{{ search_title}}{% endif %}" name="search_title">
+              <button type="submit" class="btn btn-primary ms-3">Search</button>
+            </form>
+          </div>
+          
+          {% endif %}
+
+          
+      </div>
+    </div>
+  </div>
+</nav>

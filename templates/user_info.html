@@ -1,0 +1,25 @@
+{% extends './layout/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block extraCss %}
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        .user-header {
+            color: #ffa45c;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;
+{% if messages %}margin-top: 50px;{% else %}margin-top: 150px;{% endif %}">
+
+</div>
+    
+    
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends './layout/base.html' %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 1000px;">
+        <div class="mt-4">
+            <h3 class="fs-2 py-3 fw-bold text-secondary border-bottom mt-4 mb-3">Join</h3>
+            {% if message %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Validation Error!</h4>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label text-lead" for="username">Username</label>
+                    <input class="form-control" id="username" name="username" type="text" placeholder="Enter username" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-lead" for="email">Email</label>
+                    <input class="form-control" id="email" name="email" type="text" placeholder="Enter email" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-lead" for="password">Password</label>
+                    <input class="form-control" id="password" name="password" type="password" placeholder="Enter password" >
+                </div>
+                <div class="mb-3">
+                    <input class="btn btn-primary" type="submit" value="Signup">
+                </div>
+            </form>
+            
+        </div>
+    </div>
+{% endblock %}

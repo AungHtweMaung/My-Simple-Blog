@@ -1,0 +1,29 @@
+{% extends './layout/base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px; margin-top: 100px;">
+    {% if is_owner %}
+        <div class="mb-3 float-end">
+            <a href="
+            {% url 'edit_article' article.id %}
+            " class="btn btn-secondary p-3">manage</a>
+        </div>
+    {% endif %}
+    <div class="mb-3">
+        <img class="img-fluid" src="/media/{{ article.image }}" alt="">
+    </div>
+    <div class="mb-3">
+        <h6>by {{ article.author }}</h6>
+        <h3>{{ article.title }}</h3>
+    </div>
+    <div class="mb-3">
+        <p>{{article.content | safe }}</p>
+    </div>
+    
+</div>
+       
+        
+    
+{% endblock %}

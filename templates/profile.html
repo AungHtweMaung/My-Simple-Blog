@@ -1,0 +1,36 @@
+{% extends './layout/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;
+{% if messages %}margin-top: 50px;{% else %}margin-top: 150px;{% endif %}">
+   <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <!-- user authentication နဲ့ Profile Model ချိတ်ထားလို့ user.profile ဆိုပြီး profile table ထဲက field တွေသုံးလို့ရတာ။  -->
+                <div class="text-center py-3">
+                    <img src="{{ user.profile.image.url }}" class="mb-3 rounded-circle" width="100" height="100" alt="">
+                    <h2>{{ user.username }}</h2>
+                    <h5>{{ user.email }}</h5>
+                </div>
+                <div class="p-3">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ u_form|crispy }}
+                        {{ p_form|crispy }}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+   </div>
+
+   
+</div>
+       
+        
+    
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends './layout/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 1000px;">
+        <div class="my-3">
+            <div class="d-flex align-items-center justify-content-between p-3" style="background: #ede5ed;">
+                <h5>Blog</h5>
+                <a href="{% url 'create_article' %}" class="btn btn-secondary">Create</a>
+            </div>
+            <div class="shadow p-4">    
+                <h3>Created <span style="color: #581b98; font-weight: bold;">{{ total_article }}</span>,
+                    Published <span id="total-publish"
+                    style="color: #581b98; font-weight: bold;">{{ total_publish }}</span></h3>
+            </div>
+        </div>
+        
+        <div id="extra_js_msg"></div>
+
+        <h1 class="text-secondary border-bottom pb-3 mt-5">Dashboard</h1>
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Publish</th>
+                    <th colspan="2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.author }}</td>
+                    <td>{{ article.category }}</td>
+                    <td class="publish_or_not">{{ article.is_publish }}</td>
+                    <td><a href="{% url 'edit_article' article.id %}" class="btn btn-sm btn-secondary">manage</a></td>
+                    <td>
+                         {% comment %} 
+                            We want post id when we click btn  
+                            So we create custom attribute (post-id) and take the value of this attribute 
+                            by using js's getAttribute() method.
+                            We will request to the backend with post id
+                        {% endcomment %}
+                        {% if article.is_publish %}
+                        <a href="#" req-url="{% url 'handle_publishing' %}" post-id="{{ article.id }}" onclick="handle_publishing(this)" class="btn btn-sm btn-warning">Unpublished</a>
+                        {% else %}
+                        <a href="#" req-url="{% url 'handle_publishing' %}" post-id="{{ article.id }}" onclick="handle_publishing(this)" class="btn btn-sm btn-success">Publish</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td class="fs-5 fst-italic text-center" colspan="5">No Post yet!</td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}
+
+<!-- button တွေကို click လိုက်ရင် ဖြစ်မယ့် action အတွက် js ထည့်ရေးတာ -->
+{% block js%}
+    <script>
+
+        const csrf_token = "{{ csrf_token }}"; // need to get csrf_token because of post method
+
+        // total_publish ကိုပြဖို့ id ပေးပီး လှမ်းယူလိုက်ပီး number ပြောင်းပီး publish လုပ်ရင် 1 တိုပေးတယ်။ Unpublish လုပ်ရင် 1 လျော့ပေးလိုက်တယ် 
+        let total_publish = document.querySelector("#total-publish").innerHTML;
+        total_publish = Number(total_publish)
+        {% comment %} console.log(typeof(total_publish)) {% endcomment %}
+
+        // To change True or False in Dashboard without refreshing.
+        let publish_or_not = document.querySelector(".publish_or_not");
+        
+
+        function handle_publishing(e) {
+            // Value of the custom attribute(post-id) we created will be got
+            const post_id = e.getAttribute("post-id");
+            const req_url = e.getAttribute("req-url");
+            // console.log(typeof(Number(total_publish.innerHTML)))
+
+            fetch(req_url, {
+                method: "POST",
+                headers: {'X-CSRFToken': csrf_token},
+                mode: 'same-origin', // Do not send CSRF token to another domain.
+
+                // objects we want to put will be included in body with json format.
+                // We will request to backend with json method and then backend will response back with json method. 
+                body: JSON.stringify({
+                    id: post_id,
+                    total_publish: total_publish,
+                }) 
+            })
+            .then(response => response.json() // backend ကနေပို့လိုက်တဲ့ json response ကိုလိုချင်လို့ 
+            .then(data => ({ status: response.status, data: data })))
+            .then(obj => {
+                console.log(obj.data.is_publish)
+                if (obj.status === 200) {
+                    const alert_msg = `
+                    <div class="alert 
+                    alert-success
+                    alert-dismissible fade show" role="alert">
+                        <p class="m-0">${obj.data.msg}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    `;
+
+                    document.querySelector("#extra_js_msg").innerHTML = alert_msg;
+                    // console.log(obj.data.is_publish)
+                    // console.log(document.querySelector("#is_publish"))
+ 
+                    if (obj.data.operation == "Unpublished"){
+                        // Unpublish လုပ်မယ်ဆိုရင် btn ကို success ပြန်ပြပီး total_publish ကို 1 နုတ် 
+                        total_publish -= 1
+                        document.querySelector("#total-publish").innerHTML = total_publish
+                        e.textContent = "Publish"
+                        e.setAttribute("class", "btn btn-sm btn-success")
+                        e.parentElement.parentElement.childNodes[7].textContent = "False"
+                    }
+                    else {
+                        // console.log(publish_or_not)
+                        // publish လုပ်ထားရင် text ကို Unpublish လုပ်လို့ရကြောင်း warning နဲ့ပြမယ် 
+                        total_publish += 1
+                        document.querySelector("#total-publish").innerHTML = total_publish
+                        e.textContent = "Unpublished"
+                        e.setAttribute("class", "btn btn-sm btn-warning")
+                        e.parentElement.parentElement.childNodes[7].textContent = "True"
+                    }   
+                }
+            })  // { status: response.status, data: data } အဲ့ဒီ data ကိုထုတ်ပေးမယ်
+            .catch(error => {
+                console.log(error);
+            })
+        }
+    </script>
+{% endblock %}

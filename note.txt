@@ -1,0 +1,263 @@
+Django 
+--------
+1. Python based web framework
+2. MVT architecture
+3. Django ORM
+
+Python package 
+---------------
+package ဆိုတာ python moduels တွေစုထားတဲ့ collection ကိုပြောတာ
+python moduel => single python file ပဲ 
+
+__init__.py နဲ့ package create လုပ်ခြင်းသည် ကြီးမားတဲ့ python project တွေကို develop လုပ်ဖို့ လွယ်ကူစေတယ်။
+__init__.py လုပ်ခြင်းသည် သီးသန့်စီ တည်ရှိနေတဲ့ python scripts တွေရဲ့ large folders တွေကို group ဖွဲ့ပြီး single module လေးတစ်ခုအနေနဲ့ import လုပ်လို့ရအောင် လုပ်ပေးတယ် 
+
+MVT
+-------
+The MVT (Model View Template) is a software design pattern in Django’s architecture that consists of three components:
+• Model: responsible for the database (ORM)
+• Template: responsible for the presentation layer & user
+interface
+• View: responsible for the business logic
+
+ORM (object relational mapping)
+-----------------------------------
+=> orm ဆိုတာ database နဲ့ အပြန်လှန် (interact) အကျိူးသက်ရောက်ဖို့ဖြစ်တယ်
+=> models file ထဲက class တိုင်းသည် database table တွေဖြစ်တယ်
+=> class ထဲမှာ defined လုပ်ထားတဲ့ property or field တွေသည် table ထဲက column တွေကို represent လုပ်တယ် 
+=> sql command တွေရေးစရာမလိုဘူး Django way အတိုင်းရေးရတယ် 
+   အဲ့လိုရေးချင်းသည် simplified and cleaner solution ဖြစ်တယ် 
+   django က shorter and more readable querysets တွေဖြစ်ဖို့အတွက် အခြေခံထားတာ။ 
+
+What is a Queryset 
+=> ပေးထားတဲ့ ဆုံးဖြတ်ချက်တွေအပေါ်မူတည်ပီး database တွေကနေ accessed model ရဲ့ a list of objects ကိုပြောတာ 
+
+
+configuring static file 
+-----------------------
+add to setting.py
+----------------
+# STATICFILES_DIRS သည်  extra css, js file တွေချိတ်ဖို့ အတွက် project folder ထဲမှာ 
+# static_project directory ကို create လုပ်ပေးလိုက် 
+# အဲ့တာမှ django က additional file တွေရှိမှန်း သိမာ  
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static_project")
+] 
+
+
+# static_root နဲ့ media_root ကို static_cdn dir တစ်ခုတည်းအောက်မှာ create လုပ်လိုက်တယ်  
+# collectstatic run လိုက်ရင် static_root အောက်မှာ static files အားလုံးကို ဆောင်ရွက်ဖို့ copy လူပ်သွားမယ် 
+# media_root => user က server ဆီကို upload လုပ်တိုင်း media_root သည် updated ဖြစ်မယ် 
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn", "static_root")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "static_cdn", "media_root")  
+
+
+
+
+urls.py
+--------
+urls.py ထဲမှာလည်း setting ထဲမှာ static, media file တွေကို သုံးထားတာ အကြုံးဝင်ဖို့ သတ်မှတ်ပေးရတယ် 
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(
+settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += static(
+settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+os.path
+------------
+1=> os.path.basename(path): return name of the file form given path
+
+import os 
+print(os.path.basename("myfolder/abc.txt")) # abc.txt
+
+2 => os.path.dirname(path) : returns the directory of the file with the name of the file
+  => အဲ့ဒီ file ရှိတဲ့ directory ကို ပြပေးမာ 
+file = os.path.dirname("/myfolder/abc.txt")  
+print(file) # /myfolder
+
+3 => os.path.join(path): returns a path merged out of multiple path components
+  => path တွေကို join ပေးတာ 
+
+my_path = "/example"
+
+print(os.path.join(my_path, "parent", "child"))
+# /example/parent/child
+
+
+Middlewares
+-------------
+middleware သည် view ထဲက function နဲ့တူတယ်။ 
+It will be excuted before and after rendering the view.
+request and response တွေရဲ့ processing တွေကို globally လုပ်ဆောင်ပေးတယ် 
+so there is no need for customisation of every view
+
+middleware ကလုပ်ဆေင်ပေးတဲ့ example operations များ 
+-----------------------------------------------
+HTTP authentication
+Session management
+Encryption
+Validation
+
+Django middlewares require at least one of the following methods:
+process_request, process_response, process_view,
+and process_exception
+
+
+We can distinguish 3 types of relationships
+=> Many-to-many relationship - many users can like many posts
+=> Many-to-one relationship - a particular comment can be related to one Post only, but many comments can be associated to a given Post
+=> One-to-one relationship - one user can have only one Profile
+
+
+
+blog project ရေးတဲ့နေရာမှာ article ဆို တဲ့ application create လုပ်လိုက်မယ် 
+အဲ့ဒီ article ထဲမှာ ဘာ database တွေ လိုနိင်လည်း ဆိုတော့ 
+
+1 => Need author table that wrote articles 
+
+2 => category table 
+  => for eg; we can know and search many articles according to the category
+
+3 => article table 
+  => for eg; we stores texts and images in article table 
+
+
+Ck editor 
+-------------
+blog တွေရေးတဲ့နေရာမှာ text editor လို သုံးတာ။ 
+ckeditor သုံးရင် text တွေကို bold, italic မျိူးစုံလုပ်လို့ရမယ် 
+
+-> ckeditor သုံးရင် images ထည့်တာတွေ၊ text စာသားတွေပြောင်းတာတွေအတွက် STATIC_ROOT setting ထဲမှာ static file တွေသတ်မှတ်ပေးဖို့လိုတယ် 
+
+
+
+models.py 
+-------------
+django မှာ authentication အတွက် auth.User ဆိုပီး ရှိတယ်
+
+If you’re starting a new project, it’s highly recommended to set up a custom user model, even if the default User model is sufficient for you. This model behaves identically to the default user model, but you’ll be able to customize it in the future if the need arises:
+
+ဒါပေမယ့် table name တွေပြန်ပြောင်းချင်တယ် fields တွေ add ချင်တယ်ဆိုရင် AbstractUser (custom user) ရှိတယ်။ 
+
+=> from django.contrib.auth.models import AbstractUser
+    authentication ပိုင်းအတွက် သုံးတဲ့ user model ကို import လုပ်လိုက်တာ
+  
+=> models.py
+   class Author(AbstractUser):
+
+      def __str__(self):
+          return self.username
+
+=>
+ ပြီးရင် django ကို ပြန်ပြောရမယ်။ ဘယ် model ကို authentication ပိုင်းအတွက် သုံးမလဲဆိုတာ ။ 
+    AUTH_USER_MODEL = 'myapp.MyUser'  # app.table 
+
+IntegrityError
+----------------
+database နဲ့ဆိုင်တဲ့ error 
+Exception raised when the relational integrity of the database is affected, e.g. a foreign key check fails, duplicate key, etc.
+Django မှာ IntegrityError သည် username အတွက်ပဲ လုပ်ပေးထားတာ။ 
+
+email_already_exist = Author.objects.get(email=email)
+=> email သည် database ထဲမှာ more then one ဖြစ်နေတဲ့အတွက် get နဲ့ သုံးရင် erorr တက်မယ် 
+
+
+
+Author တွေက form တွေ blog တွေ ရေးတဲ့အချိန်မှာ form validation တွေက ပိုလိုလာတယ် 
+author တွေ create လုပ်ဖို့ image, title, content စတဲ့ field တွေကို Manually ရေးမယ်ဆိုရင် တော်တော်လေး ရေးရမှာ 
+အဲ့ဒါကြောင့် ကိုယ်ရှေ့မှာ ပေးထားတဲ့ field တွေအတိုင်း မြန်မြန်တည်ဆောက်ချင်ရင် ModelForm ဆိုတာကို import လုပ်ပီး model တစ်ခုတည်ဆောက်ပေးလိုက်
+
+Note 
+=====
+article ထဲမှာ author table ကို foreign key နဲ့ ချိတ်လိုက်ပီဆိုရင် 
+article.author. ဆိုပီး author table မှာ ရှိတဲ့ field တွေကို ခေါ်သုံးလို့ရပီ။ 
+
+
+status code တွေကြည့်ချင်ရင် => http status code ဆိုပီး google မှာရှာဖတ်။ 
+
+fetch api js
+-------------
+fetch('url');
+
+fronted က data တွေကို backend ဆီကို request လုပ်မာ fetch ကိုသုံးပီး။ 
+ 
+ <script>
+
+        const csrf_token = "{{ csrf_token }}"; // need to get csrf_token because of post method
+
+        function handle_publishing(e) {
+            // Value of the custom attribute(post-id) we created will be got
+            const post_id = e.getAttribute("post-id");
+            const req_url = e.getAttribute("req-url");
+
+            // console.log(post_id, req_url);
+
+            fetch(req_url, {
+                method: "POST",
+                headers: {'X-CSRFToken': csrf_token},
+                mode: 'same-origin', // Do not send CSRF token to another domain.
+                
+
+                // objects we want to put will be included in body with json format.
+                // We will request to backend with json method and then backend will response back with json method. 
+                body: JSON.stringify({
+                    id: post_id
+                }) 
+            }).then(response => {
+                console.log(response); 
+            }).catch(error => {
+                console.log(error);
+            })
+            
+        }
+    </script>
+
+body ထဲမှာ backend ကို ဘာ data တွေပေးလိုက်ချင်တာလည်း ထည့်ပေးလိုက်
+
+
+=> backend ကနေ ပို့ပေးလိုက်တဲ့ operation type နဲ့ပြန်ပြောင်းမှာ။ publish, unpublish ကို 
+
+
+ {% comment %} 
+                    We want post id when we click btn  
+                    So we create custom attribute (post-id) and take the value of this attribute 
+                    by using js's getAttribute() method.
+                    We will request to the backend with post id
+                {% endcomment %}
+
+
+default User model 
+------------------------
+User authentication ပိုင်းအတွက် default user model ကိုသုံးမယ်ဆိုရင် field တွေကို customization လုပ်လို့မရဘူး
+အဲ့တာကြောင့်  field တွေကို ထပ်ပီး ထည့်ချင်ရင် model အသစ်တစ်ခုထပ်ဆောက်ပီး အောက်ကလို OnetoOneField နဲ့သုံးပေးရတယ် 
+
+Default user model in Django save some limited fields about one user. fields are ....
+first_name, last_name, email, password, groups, user_permissions, is_staff, is_active, is_superuser, last_login, date_joined
+
+from django.contrib.auth.models import User
+    class UserProfile(models.Model): 
+       user = models.OnetoOneField(User, on_delete=models.CASCADE)
+       birthday = models.DateTimeField(default=datetime.datetime.now)
+       skills = models.CharField(max_length=128) 
+
+
+Django Signals
+================
+Django provides a mechanism to send and receive messages between different parts of an application, called the ‘signal dispatcher’. 
+
+Django မှာ signal dispatcher ပါတယ် 
+signal dispatcher သည် django framework အတွင်း တခြားနေရာမှာ actions တွေတွေတဲ့အခါ decoupled applications (application တွေကို ခွဲထားတာကိုပြောတာ) တွေက အကြောင်းကြားပေးဖို့ကို ကူညီတယ်
+
+signal ကိုသုံးမယ်ဆိုရင် sender နဲ့ reciever ပါရမယ် 
+Django provides a set of built-in signals that let user code get notified by Django itself of certain actions. 
+
+Model signals
+-------------
+The django.db.models.signals module defines a set of signals sent by the model system.
