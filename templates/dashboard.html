@@ -3,63 +3,70 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <div class="container" style="max-width: 1000px;">
-        <div class="my-3">
-            <div class="d-flex align-items-center justify-content-between p-3" style="background: #ede5ed;">
-                <h5>Blog</h5>
-                <a href="{% url 'create_article' %}" class="btn btn-secondary">Create</a>
+    <div class="container">
+       <div class="row" style="margin-top: 100px;">
+            <div class="col-md-10 m-auto">
+                <div class="my-3">
+                    <div class="d-flex align-items-center justify-content-between p-3" style="background: #ede5ed;">
+                        <h5>Blog</h5>
+                        <a href="{% url 'create_article' %}" class="btn btn-secondary">Create</a>
+                    </div>
+                    <div class="shadow p-4">    
+                        <h3>Created <span style="color: #581b98; font-weight: bold;">{{ total_article }}</span>,
+                            Published <span id="total-publish"
+                            style="color: #581b98; font-weight: bold;">{{ total_publish }}</span></h3>
+                    </div>
+                </div>
             </div>
-            <div class="shadow p-4">    
-                <h3>Created <span style="color: #581b98; font-weight: bold;">{{ total_article }}</span>,
-                    Published <span id="total-publish"
-                    style="color: #581b98; font-weight: bold;">{{ total_publish }}</span></h3>
+            <div class="col-md-10 m-auto">
+                <div id="extra_js_msg"></div>
+
+                <h1 class="text-secondary border-bottom pb-3 mt-5">Dashboard</h1>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Publish</th>
+                            <th colspan="2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in articles %}
+                        <tr>
+                            <td>{{ article.title }}</td>
+                            <td>{{ article.author }}</td>
+                            <td>{{ article.category }}</td>
+                            <td class="publish_or_not">{{ article.is_publish }}</td>
+                            <td><a href="{% url 'edit_article' article.id %}" class="btn btn-sm btn-secondary">manage</a></td>
+                            <td>
+                                {% comment %} 
+                                    We want post id when we click btn  
+                                    So we create custom attribute (post-id) and take the value of this attribute 
+                                    by using js's getAttribute() method.
+                                    We will request to the backend with post id
+                                {% endcomment %}
+                                {% if article.is_publish %}
+                                <a href="#" req-url="{% url 'handle_publishing' %}" post-id="{{ article.id }}" onclick="handle_publishing(this)" class="btn btn-sm btn-warning">Unpublished</a>
+                                {% else %}
+                                <a href="#" req-url="{% url 'handle_publishing' %}" post-id="{{ article.id }}" onclick="handle_publishing(this)" class="btn btn-sm btn-success">Publish</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="fs-5 fst-italic text-center" colspan="5">No Post yet!</td>
+                        </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
             </div>
-        </div>
+       </div>
         
-        <div id="extra_js_msg"></div>
-
-        <h1 class="text-secondary border-bottom pb-3 mt-5">Dashboard</h1>
-
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Category</th>
-                    <th>Publish</th>
-                    <th colspan="2">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for article in articles %}
-                <tr>
-                    <td>{{ article.title }}</td>
-                    <td>{{ article.author }}</td>
-                    <td>{{ article.category }}</td>
-                    <td class="publish_or_not">{{ article.is_publish }}</td>
-                    <td><a href="{% url 'edit_article' article.id %}" class="btn btn-sm btn-secondary">manage</a></td>
-                    <td>
-                         {% comment %} 
-                            We want post id when we click btn  
-                            So we create custom attribute (post-id) and take the value of this attribute 
-                            by using js's getAttribute() method.
-                            We will request to the backend with post id
-                        {% endcomment %}
-                        {% if article.is_publish %}
-                        <a href="#" req-url="{% url 'handle_publishing' %}" post-id="{{ article.id }}" onclick="handle_publishing(this)" class="btn btn-sm btn-warning">Unpublished</a>
-                        {% else %}
-                        <a href="#" req-url="{% url 'handle_publishing' %}" post-id="{{ article.id }}" onclick="handle_publishing(this)" class="btn btn-sm btn-success">Publish</a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td class="fs-5 fst-italic text-center" colspan="5">No Post yet!</td>
-                </tr>
-                {% endfor %}
-                
-            </tbody>
-        </table>
+        
     </div>
 {% endblock content %}
 

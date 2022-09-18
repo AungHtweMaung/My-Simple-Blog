@@ -11,9 +11,17 @@
   <body>
     <!-- file တွေချိတ်တဲ့ နေရာမှာ templates folder ကို ထည့်တွက်စရာမလိုဘူး templates folder အထဲက ကောင်တွေကို စပီး ထည့်တွက်ရတယ်။ -->
     {% include 'components/navbar.html' %}
-    <div class="container" style="max-width: 1000px; margin-top: 100px;">
-      {% include '../components/notification.html' %}
+
+    <div class="container" style="">
+      <div class="row">
+          <div class="col-md-10">
+            {% include '../components/notification.html' %}
+          </div>
+      </div>
     </div>
+    {% comment %} <div class="container" style="max-width: 1000px; margin-top: 100px;">
+      {% include '../components/notification.html' %}
+    </div> {% endcomment %}
     {% block content %}{% endblock content %}
     {% include 'components/footer.html' %}
 
