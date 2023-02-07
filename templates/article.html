@@ -3,7 +3,7 @@
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 1000px; margin-top: 100px;">
+<div class="container px-4" style="max-width: 1000px; margin-top: 50px;">
     {% if is_owner %}
         <div class="mb-3 float-end">
             <a href="
@@ -15,8 +15,7 @@
         <img class="img-fluid" src="/media/{{ article.image }}" alt="">
     </div>
     <div class="mb-3">
-        <h6>by {{ article.author }}</h6>
-        <h3>{{ article.title }}</h3>
+        <h6>by {{ article.author }}<i class="text-muted">/{{ article.title }}</i></h6>
     </div>
     <div class="mb-3">
         <p>{{article.content | safe }}</p>
