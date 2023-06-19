@@ -29,9 +29,9 @@
                   <input type="text" class="form-control" value="{% if search_title %}{{ search_title}}{% endif %}" name="search_title">
                   <button type="submit" class="btn btn-primary ms-3">Search</button>
                 </form>
-                <div class="dropdown-center" style="margin-right: 150px;">
+                <div class="dropdown-center mt-2 mt-lg-0" style="margin-right: 150px;">
   
-                  <img src="{{ user.profile.image.url }}" class="rounded-circle" width="45" height="45" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" alt="">
+                  <img src="{{ user.profile.image.url }}" style="cursor: pointer;" class="rounded-circle" width="45" height="45" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" alt="">
                   
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>

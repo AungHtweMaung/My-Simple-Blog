@@ -3,18 +3,17 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 1000px;
-{% if messages %}margin-top: 50px;{% else %}margin-top: 100px;{% endif %}">
-
+<div class="container" style="max-width: 1000px; margin-top: 50px;">
+{% comment %} {% if messages %}margin-top: 50px;{% else %}margin-top: 100px;{% endif %} {% endcomment %}
     {% for article in articles reversed %}
     <div class="row mb-3">
         <div class="col-md-12">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col-auto d-none d-lg-block ">
-                  <img src="media/{{ article.image }}" width="280px" height="280px " alt="{{ article.image }}">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm  position-relative">
+                <div class="col-lg-4 d-none d-lg-block ">
+                  <img src="media/{{ article.image }}" class="img-fluid h-100"  alt="{{ article.image }}">
         
                 </div>
-                <div class="col p-4 d-flex flex-column">
+                <div class="col-lg-8 p-4 d-flex flex-column">
                     {% comment %} <strong class="d-inline-block mb-2 text-secondary">{{ article.title }} by <i class="text-dark">{{ article.author }}</i></strong> {% endcomment %}
                     <h3 class="mb-0 text-secondary">{{ article.title }}</h3>
                     <span>by <strong><i>{{ article.author }}</i></strong></span>
