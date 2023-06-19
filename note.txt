@@ -1,4 +1,4 @@
-Django 
+Django (python web framework)
 --------
 1. Python based web framework
 2. MVT architecture
